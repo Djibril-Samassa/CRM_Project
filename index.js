@@ -91,9 +91,9 @@ app.post("/contact", middleware1, async(req,res) =>{
 })
 
 app.put("/contact/:name", middleware1, async(req,res) =>{
-    const newData = await req.body;
+    const { name, email, description, category } = req.body;
     try {
-        await Contact.findOneAndReplace({name : req.params.name}, {newData});
+        await Contact.findOneAndReplace({name : req.params.name}, {name, email, description, category});
     }
     catch(err){
         console.log(err);
@@ -102,6 +102,19 @@ app.put("/contact/:name", middleware1, async(req,res) =>{
         })
     }
     res.json("le contact a bien été modifié")
+})
+
+app.delete("/contact/delete/:name", middleware1, async(req, res) =>{
+    try{
+        await Contact.findOneAndDelete({name: req.params.name})
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            message: "An error Happened"
+        })
+    }
+    res.json("Contact supprimé")
 })
 
 app.listen(8000,() =>{
