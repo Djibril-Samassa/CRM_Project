@@ -2,13 +2,23 @@ const mongoose = require("mongoose");
 
 const contactSchema = mongoose.Schema({
     userId: [{type: mongoose.Types.ObjectId, ref:"User"}],
-    name: String,
+    name: {
+        type: String,
+        // required: true
+    },
     email:{
         type: String,
-        Unique: true
+        Unique: true,
+        // required: true
         },
-    description: String,
-    category: Number
+    description: {
+        type: String,
+        // required: true
+    },
+    category: {
+        type: Number,
+        // required: true
+    }
 })
 
 const Contact = mongoose.model("Contact", contactSchema);

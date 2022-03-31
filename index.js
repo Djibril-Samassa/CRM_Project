@@ -6,7 +6,7 @@ const CookieParser = require("cookie-parser");
 const User = require("./models/userModel");
 const Contact = require("./models/contactModel");
 const ADN = "bpdxkojfnnqbmopojcfdjiagjtydsyflyzmgfxqatzfwmtpcuxgpdyuleomhtoso";
-let LoggedIn = false
+let isLoggedIn = true;
 
 const app =  express();
 app.use(express.json());
@@ -17,7 +17,7 @@ mongoose.connect("mongodb+srv://Djibril:lNedKFxGkSmmeTJ6@cluster0.qzfvb.mongodb.
     console.log("Connected to MongoDB");
 })
 
-function middleware(req, res, next){
+function middleware1(req, res, next){
     if(isLoggedIn === false){
         console.log("veuillez vous connecter");
     }else{
@@ -75,17 +75,33 @@ app.post("/login", async(req,res) =>{
     res.json("connected")
 })
 
-app.post("/contact", middleware, async(req,res) =>{
-    
+app.post("/contact", middleware1, async(req,res) =>{
+    const data = req.body;
+    const nb = data.lenght;
     try{
-        await Contact.create(req.body)
+         await Contact.create(data)
     } catch(err){
         console.log(err);
         res.status(400).json({
             message: "An error happened"
         })
     }
-    res.json("contact ajouté")
+
+    res.json(`${data.name} a été ajouté aux contacts`)
+})
+
+app.put("/contact/:name", middleware1, async(req,res) =>{
+    const newData = await req.body;
+    try {
+        await Contact.findOneAndReplace({name : req.params.name}, {newData});
+    }
+    catch(err){
+        console.log(err);
+        res.status(400).json({
+            message: "An error happened"
+        })
+    }
+    res.json("le contact a bien été modifié")
 })
 
 app.listen(8000,() =>{
