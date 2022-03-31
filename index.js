@@ -6,6 +6,7 @@ const CookieParser = require("cookie-parser");
 const User = require("./models/userModel");
 const Contact = require("./models/contactModel");
 const ADN = "bpdxkojfnnqbmopojcfdjiagjtydsyflyzmgfxqatzfwmtpcuxgpdyuleomhtoso";
+let LoggedIn = false
 
 const app =  express();
 app.use(express.json());
@@ -16,6 +17,13 @@ mongoose.connect("mongodb+srv://Djibril:lNedKFxGkSmmeTJ6@cluster0.qzfvb.mongodb.
     console.log("Connected to MongoDB");
 })
 
+function middleware(req, res, next){
+    if(isLoggedIn === false){
+        console.log("veuillez vous connecter");
+    }else{
+        next();
+    }
+}
 
 app.get("/",(req,res) =>{
     res.json("Bienvenue sur le Projet CRM")
@@ -62,7 +70,22 @@ app.post("/login", async(req,res) =>{
 
     res.cookie("jwt", token, {httpOnly: true, secure: false});
 
+    isLoggedIn = true;
+
     res.json("connected")
+})
+
+app.post("/contact", middleware, async(req,res) =>{
+    
+    try{
+        await Contact.create(req.body)
+    } catch(err){
+        console.log(err);
+        res.status(400).json({
+            message: "An error happened"
+        })
+    }
+    res.json("contact ajouté")
 })
 
 app.listen(8000,() =>{
