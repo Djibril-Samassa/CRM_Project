@@ -29,6 +29,7 @@ app.get("/",(req,res) =>{
     res.json("Bienvenue sur le Projet CRM")
 })
 
+
 app.post("/register", async(req,res) =>{
     const hashedPassword = await bcrypt.hash(req.body.password, 5)
     try{
@@ -115,6 +116,17 @@ app.delete("/contact/delete/:name", middleware1, async(req, res) =>{
         })
     }
     res.json("Contact supprimé")
+})
+
+app.get("/contact", middleware1, async(req,res) =>{
+    const contactList = await Contact.find();
+    const filteredContact = await contactList.filter((contact)=>{
+        return(
+            contact.name = req.query.name
+        )
+    })
+
+    res.json(filteredContact);
 })
 
 app.listen(8000,() =>{
