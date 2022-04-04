@@ -6,8 +6,11 @@ const CookieParser = require("cookie-parser");
 const User = require("./models/userModel");
 const Contact = require("./models/contactModel");
 const ADN = "bpdxkojfnnqbmopojcfdjiagjtydsyflyzmgfxqatzfwmtpcuxgpdyuleomhtoso";
-let isLoggedIn = true;
+require('dotenv').config();
 
+const { PORT, MONGODB_URI, API_KEY } = process.env;
+let isLoggedIn = true;
+var port = process.env.PORT || 8000;
 const app =  express();
 app.use(express.json());
 
