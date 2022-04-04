@@ -29,7 +29,7 @@ function middleware1(req, res, next){
 }
 
 app.get("/",(req,res) =>{
-    res.json("Bienvenue sur le Projet CRM")
+    res.send("<h1>Bienvenue sur le Projet CRM</h1>")
 })
 
 
